@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="heading">
+  <h1> Data server </h1>
+  <a href="{{ url_for('downloads') }}">Downloads</a>
+  <a href="{{ url_for('logout') }}">Logout</a>
+  <div class="messages contentbox">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+  </div>
+</div>
+
+<div class="submissions contentbox">
+  <h2> Measurement sets on the file server: </h2>
+  <table>
+    <tr>
+      <td> fileserver_id </td>
+      <td> <b> measure_date </b> </td>
+      <td> submission_date </td>
+      <td> fieldform_file_name </td>
+      <td> datafile_name </td>
+      <td> <p> status </p> </td>
+      <td> <p> datafile_status </p> </td>
+      <td> <p> fieldform_status </p> </td>
+      <td> fetched </td>
+      <td> fetch </td>
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td class="lastline" colspan="7"> <i> comment </i> </td>
+      <td> &nbsp; </td>
+      <td> &nbsp; </td>
+    </tr>
+    {% for d in sub_data: %}
+    <tr>
+      <td> {{ d.fileserver_id }} </td>
+      <td> <b> {{ d.measure_date }} </b> </td>
+      <td> {{ d.date.strftime('%Y-%m-%d %H:%M') }} </td>
+      <td> {{ d.fieldname }} </td>
+      <td> {{ d.dataname }} </td>
+      <td>
+	{% if d.status == "retracted" %}
+	<p class="warning"> {{ d.status }} </p>
+	{% else %}
+	<p> {{ d.status }} </p>
+	{% endif %}
+      </td>
+      <td>
+	{% if d.datastatus == "invalid" %}
+	<p class="warning"> {{ d.datastatus }} </p>
+	{% else %}
+	<p> {{ d.datastatus }} </p>
+	{% endif %}
+      </td>
+      <td>
+	{% if d.fieldstatus == "invalid" %}
+	<p class="warning"> {{ d.fieldstatus }} </p>
+	{% else %}
+	<p> {{ d.fieldstatus }} </p>
+	{% endif %}
+      </td>
+      <td> {{ d.fetched }} </td>
+      <td>
+        {% if d.status == "submitted" %}
+        {% if d.datastatus == "valid" %}
+        {% if d.fieldstatus == "valid" %}
+        {% if not d.fetched %}
+        <a href="/api/fetch/{{ d.fileserver_id }}">fetch</a>
+        {% endif %}
+        {% endif %}
+        {% endif %}
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td class="lastline" colspan="7"> <i> {{ d.comment }} </i> </td>
+      <td> &nbsp; </td>
+      <td> &nbsp; </td>
+    </tr>
+    {% endfor %}
+  </table>
+  <a href="/api/update">update</a>
+</div>
+
+<div class="data contentbox">
+  <h2> Data on this server: </h2>
+
+  <div class="subdata contentbox">
+    <h3> Measurements datasets </h3>
+    <table>
+      <tr>
+	<td> local_id </td>
+	<td> fileserver_id </td>
+	<td> siteids </td>
+	<td> measure_date </td>
+	<td> submission_date </td>
+	<td> fetch_date </td>
+	<td> device </td>
+	<td> chamber </td>
+	<td> soil </td>
+	<td> fs_state </td>
+	<td> successful </td>
+	<td> show_data </td>
+	<td> autotrim </td>
+	<td> forget </td>
+      </tr>
+      {% for m in meas: %}
+      <tr>
+	<td> {{ m.id }} </td>
+	<td> {{ m.fileserver_id }} </td>
+	<td> {{ m.siteids }} </td>
+	<td> {{ m.measure_date }} </td>
+	<td> {{ m.date.strftime('%Y-%m-%d %H:%M:%S') }} </td>
+	<td> {{ m.fetch_date.strftime('%Y-%m-%d %H:%M:%S') }} </td>
+	<td> {{ m.device }} </td>
+	<td> {{ m.chamber }} </td>
+	<td> {{ m.soil }} </td>
+	<td> {{ m.fs_state }} </td>
+	<td> {{ m.successful }} </td>
+	<td> <a href="/dataview/{{ m.id }}">show data</a> </td>
+	<td> <a href="/autotrim/{{ m.id }}">autotrim</a> </td>
+	<td> <a href="/forget/{{ m.id }}">forget</a> </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <div class="subdata contentbox">
+    <h3> Series </h3>
+    <table>
+      <tr>
+	<td> id </td>
+	<td> meas_id </td>
+	<td> date </td>
+	<td> siteid </td>
+	<td> subsiteid </td>
+	<td> point </td>
+	<td> start_time </td>
+	<td> end_time </td>
+	<td> start_ppm </td>
+	<td> end_ppm </td>
+	<td> start_temp </td>
+	<td> end_temp </td>
+	<td> chamber_vol </td>
+	<td> chamber_area </td>
+      </tr>
+      {% for s in seri: %}
+      <tr>
+	<td> {{ s.id }} </td>
+	<td> {{ s.measurements }} </td>
+	<td> {{ s.date }} </td>
+	<td> {{ s.siteid }} </td>
+	<td> {{ s.subsiteid }} </td>
+	<td> {{ s.point }} </td>
+	<td> {{ s.start_time }} </td>
+	<td> {{ s.end_time }} </td>
+	<td> {{ s.start_ppm }} </td>
+	<td> {{ s.end_ppm }} </td>
+	<td> {{ s.start_temp }} </td>
+	<td> {{ s.end_temp }} </td>
+	<td> {{ s.chamber_vol | round(4) }} </td>
+	<td> {{ s.chamber_area | round(4) }} </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+{% endblock %}

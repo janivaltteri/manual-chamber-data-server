@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="heading">
+  <h1> Data server </h1>
+  <a href="{{ url_for('downloads') }}">Downloads</a>
+  <a href="{{ url_for('index') }}">Index</a>
+  <a href="{{ url_for('logout') }}">Logout</a>
+  <div class="messages contentbox">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+  </div>
+</div>
+
+<div class="submissions contentbox">
+  <h2> Measurement sets on the file server: </h2>
+  <table>
+    <tr>
+      <td> fileserver_id </td>
+      <td> <b> measure_date </b> </td>
+      <td> submission_date </td>
+      <td> fieldform_file_name </td>
+      <td> datafile_name </td>
+      <td> <p> status </p> </td>
+      <td> <p> datafile_status </p> </td>
+      <td> <p> fieldform_status </p> </td>
+      <td> fetched </td>
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td class="lastline" colspan="7"> <i> comment </i> </td>
+      <td> &nbsp; </td>
+    </tr>
+    {% for d in sub_data: %}
+    <tr>
+      <td> {{ d.fileserver_id }} </td>
+      <td> <b> {{ d.measure_date }} </b> </td>
+      <td> {{ d.date.strftime('%Y-%m-%d %H:%M') }} </td>
+      <td> {{ d.fieldname }} </td>
+      <td> {{ d.dataname }} </td>
+      <td>
+	{% if d.status == "retracted" %}
+	<p class="warning"> {{ d.status }} </p>
+	{% else %}
+	<p> {{ d.status }} </p>
+	{% endif %}
+      </td>
+      <td>
+	{% if d.datastatus == "invalid" %}
+	<p class="warning"> {{ d.datastatus }} </p>
+	{% else %}
+	<p> {{ d.datastatus }} </p>
+	{% endif %}
+      </td>
+      <td>
+	{% if d.fieldstatus == "invalid" %}
+	<p class="warning"> {{ d.fieldstatus }} </p>
+	{% else %}
+	<p> {{ d.fieldstatus }} </p>
+	{% endif %}
+      </td>
+      <td> {{ d.fetched }} </td>
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td class="lastline" colspan="7"> <i> {{ d.comment }} </i> </td>
+      <td> &nbsp; </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+{% endblock %}

@@ -1,0 +1,55 @@
+.warning {
+    color: #993456;
+}
+
+.headerbox {
+    padding: 5px;
+    margin: 2px;
+    display: block;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 3px;
+    vertical-align: top;
+}
+
+.headerpart {
+    padding: 5px;
+    margin: 2px;
+    display: inline-block;
+}
+
+.infobox {
+    padding: 5px;
+    margin: 2px;
+    display: inline-block;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 3px;
+    vertical-align: top;
+}
+
+.figure {
+    margin: auto;
+    width: 600px;
+    height: 400px;
+}
+
+.svg-plot, .canvas-plot {
+    position: absolute;
+}
+
+.trim_entry {
+    width: 100px;
+}
+
+.trim_s_entry {
+    width: 100px;
+}
+
+.trim_e_entry {
+    width: 100px;
+}
+
+ul {
+    padding-left: 15px;
+}

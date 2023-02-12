@@ -1,0 +1,64 @@
+{% extends "submit/base.html" %}
+
+{% block title %}projects view{% endblock %}
+
+{% block content %}
+
+<div class="header contentbox">
+  <h1 class="boxheader"> Projects </h1>
+  <p class="linkp"><a href="/submit/upload"> Return </a></p>
+</div>
+
+<div class="projectform contentbox">
+  <h2 class="boxheader"> Add project </h2>
+
+  <p> Warning: Do not add a project unless you are absolutely sure that the project is not yet listed below ! </p>
+
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <div class="buttonbox">
+      <input type="submit" value="UPLOAD">
+    </div>
+  </form>
+</div>
+
+<div class="projects contentbox">
+  <h2 class="boxheader"> Projects list </h3>
+  <table>
+    <tr>
+      <td> # </td>
+      <td> name </td>
+      <td> contact_name </td>
+      <td> contact_email </td>
+      <td> date_added </td>
+      <td> added_by </td>
+      <td> delete </td>
+      <td> see all submissions </td>
+    </tr>
+    {% for proj in projects %}
+    <tr>
+      <td> {{ proj.id }} </td>
+      <td> {{ proj.name }} </td>
+      <td> {{ proj.contact_name }} </td>
+      <td> {{ proj.contact_email }} </td>
+      <td> {{ proj.date }} </td>
+      <td> {{ proj.measurer }} </td>
+      <td>
+	<a href="/submit/deleteproject/{{ proj.id }}/"> delete </a>
+      </td>
+      <td> not implemented </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+{% endblock %}

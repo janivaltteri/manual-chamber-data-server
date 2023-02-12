@@ -1,0 +1,14 @@
+<html>
+    <head>
+      {% if title %}
+      <title>{{ title }} - GHG data server</title>
+      {% else %}
+      <title> Manual chamber GHG data server </title>
+      {% endif %}
+      <link href={{ url_for('static', filename='pohja.css') }}
+	    rel="stylesheet">
+    </head>
+    <body>
+        {% block content %}{% endblock %}
+    </body>
+</html>

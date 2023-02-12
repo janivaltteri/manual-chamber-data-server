@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="heading">
+  <h1> Data server </h1>
+  <a href="{{ url_for('downloads') }}">Downloads</a>
+  <a href="{{ url_for('measurements') }}">Measurement sets</a>
+  <a href="{{ url_for('logout') }}">Logout</a>
+  <div class="messages contentbox">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+  </div>
+</div>
+
+<div class="data contentbox">
+  <h2> Choose a project to view data: </h2>
+
+  <div class="subdata contentbox">
+    <table>
+      <tr>
+	<td> Project </td>
+      </tr>
+      {% for pn in pnames: %}
+      <tr>
+	<td> <a href="/projectdata/{{ pn }}"> {{ pn }} </a> </td>
+      </tr>
+      {% endfor %}
+      <tr>
+	<td> <a href="/projectdata/none"> not assigned yet </a> </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- 
+  <div class="subdata contentbox">
+    <h3> Measurements datasets </h3>
+    <table>
+      <tr>
+	<td> local_id </td>
+	<td> fileserver_id </td>
+	<td> siteids </td>
+	<td> measure_date </td>
+	<td> submission_date </td>
+	<td> fetch_date </td>
+	<td> device </td>
+	<td> chamber </td>
+	<td> soil </td>
+	<td> fs_state </td>
+	<td> successful </td>
+	<td> show_data </td>
+      </tr>
+      {% for m in meas: %}
+      <tr>
+	<td> {{ m.id }} </td>
+	<td> {{ m.fileserver_id }} </td>
+	<td> {{ m.siteids }} </td>
+	<td> {{ m.measure_date }} </td>
+	<td> {{ m.date.strftime('%Y-%m-%d %H:%M:%S') }} </td>
+	<td> {{ m.fetch_date.strftime('%Y-%m-%d %H:%M:%S') }} </td>
+	<td> {{ m.device }} </td>
+	<td> {{ m.chamber }} </td>
+	<td> {{ m.soil }} </td>
+	<td> {{ m.fs_state }} </td>
+	<td> {{ m.successful }} </td>
+	<td> <a href="/dataview/{{ m.id }}">show data</a> </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  -->
+</div>
+
+{% endblock %}

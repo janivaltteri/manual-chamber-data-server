@@ -1,0 +1,54 @@
+<!doctype html>
+
+<!-- tämä on ns. landing page elikkäs ensimmäinen näytettävä sivu -->
+
+<html>
+
+  <head>
+
+    <meta charset="utf-8">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/submit.css" %}" />
+
+    <title> Manual chamber GHG mesurements submission server </title>
+
+  </head>
+
+  <body>
+
+    <div class="page">
+
+      <div class="top contentbox">
+	<h1 class="landingtitle"> Upload soil respiration data </h1>
+      </div>
+
+      <div class="main contentbox">
+
+	<div class="explanation">
+	  <p class="textp">
+	    This is a version 2 test web service for submitting measurement forms.
+	  </p>
+	</div>
+
+	<div class="entry">
+	  <p class="textp">
+	    click here to login
+	  </p>
+	  <p class="linkp"> <a href="/submit/upload"> login </a> </p>
+	</div>
+
+	<div class="explanation">
+	  <p>
+	    Data server is <a href="https://data.co2ch4n2o.fi/"> here </a>
+	  </p>
+	</div>
+
+      </div>
+
+    </div>
+
+  </body>
+
+</html>
+

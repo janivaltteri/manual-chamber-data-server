@@ -1,0 +1,39 @@
+version: "3.9"
+   
+services:
+  fileserver:
+    build: 
+      context: ./fileserver
+      dockerfile: Dockerfile
+    command: python3 manage.py runserver 0.0.0.0:8000
+    # command: /usr/local/bin/gunicorn --access-logfile /opt/mcds/filelogs/access.log --workers 3 --timeout 300 --bind 0.0.0.0:8000 --bind unix:/opt/mcds/filesocket/fileserver.sock fileserver.wsgi:application
+    volumes:
+      - /opt/mcds/filedb:/opt/mcds/filedb
+      - /opt/mcds/filetemp:/opt/mcds/filetemp
+      - /opt/mcds/filelogs:/opt/mcds/filelogs
+      - /opt/mcds/filesubmit:/opt/mcds/filesubmit
+      - /opt/mcds/filesocket:/opt/mcds/filesocket
+      - /opt/mcds/filestatic:/opt/mcds/filestatic
+    ports:
+      - "8000:8000"
+    expose:
+      - 8000
+    env_file:
+      - .fileserver.env.dev
+  dataserver:
+    build:
+      context: ./dataserver
+      dockerfile: Dockerfile
+    command: python3 manage.py run -h 0.0.0.0
+    # command: /usr/local/bin/gunicorn --access-logfile /opt/mcds/datalogs/access.log --workers 3 --timeout 300 --bind 0.0.0.0:5000 --bind unix:/opt/mcds/datasocket/dataserver.sock head:server
+    volumes:
+      - /opt/mcds/datadb:/opt/mcds/datadb
+      - /opt/mcds/datalogs:/opt/mcds/datalogs
+      - /opt/mcds/datasocket:/opt/mcds/datasocket
+      - /opt/mcds/datastatic:/opt/mcds/datastatic
+    ports:
+      - "5000:5000"
+    expose:
+      - 5000
+    env_file:
+      - .dataserver.env.dev

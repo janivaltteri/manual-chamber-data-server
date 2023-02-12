@@ -1,0 +1,110 @@
+{% extends "submit/base.html" %}
+
+{% block title %}submit measurements{% endblock %}
+
+{% block content %}
+
+<div class="header contentbox">
+  {% if user.is_authenticated %}
+  <h2 class="boxheader"> Welcome user {{ user.username }} </h2>
+  <p class="linkp"><a href="{% url 'logout' %}">Log Out</a></p>
+  {% endif %}
+
+  {% if user.is_staff %}
+  <p> you are staff </p>
+  <p class="linkp"><a href="/submit/list"> Full list </a></p>
+  <p class="linkp"><a href="/submit/maintenance"> Project maintenance </a></p>
+  {% endif %}
+
+</div>
+
+<div class="submitform contentbox">
+  <h2 class="boxheader"> Submit new measurement files </h2>
+
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="buttonbox">
+      <input type="submit" value="UPLOAD">
+    </div>
+  </form>
+</div>
+
+<div class="filelist contentbox">
+  <h2 class="boxheader"> Your submitted files </h2>
+  <table>
+
+    <!-- header for the submitted files table -->
+    <tr>
+      <td> fsid </td>
+      <td> Project </td>
+      <td> Submission date </td>
+      <td> Submission status </td>
+      <td> <b> Measurement date </b> </td>
+      <td> Chamber, Soil </td>
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td> &nbsp; </td>
+      <td> Filename </td>
+      <td> File status </td>
+      <td> Details </td>
+      <td> Download </td>
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td class="lastline"> &nbsp; </td>
+      <td class="lastline" colspan="4"> <i> Comment </i> </td>
+    </tr>
+    
+  {% for meas in measurements %}
+    <tr>
+      <td> {{ meas.id }} </td>
+      <td> {{ meas.project }} </td>
+      <td> {{ meas.date | date:"Y-m-d H:i:s" }} </td>
+      <td> {{ meas.status }} </td>
+      <td> <b> {{ meas.measure_date | date:"Y-m-d" }} </b> </td>
+      <td> {{ meas.chamber }} , {{ meas.soil }} </td>
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td> &nbsp; </td>
+      <td> {{ meas.fieldorigname }} </td>
+      <td> {{ meas.fieldstatus }} </td>
+      <td>
+	<a href="/submit/fdetails/{{ meas.id }}/"> details </a>
+      </td>
+      <td>
+	<a href="/submit/ffilesend/{{ meas.id }}/"> download </a>
+      </td>
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td> &nbsp; </td>
+      <td> {{ meas.dataorigname }} </td>
+      <td> {{ meas.datastatus }} </td>
+      <td>
+	<a href="/submit/ddetails/{{ meas.id }}/"> details </a>
+      </td>
+      <td>
+	<a href="/submit/dfilesend/{{ meas.id }}/"> download </a>
+      </td>
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td class="lastline"> &nbsp; </td>
+      <td class="lastline" colspan="4"> <i> {{ meas.comment }} </i> </td>
+    </tr>
+  {% endfor %}
+  </table>
+</div>
+
+{% endblock %}

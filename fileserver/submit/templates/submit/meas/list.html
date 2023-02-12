@@ -1,0 +1,76 @@
+{% extends "submit/base.html" %}
+
+{% block title %}list measurements{% endblock %}
+
+{% block content %}
+
+<div class="filelist contentbox">
+  <h2> All submitted files </h2>
+
+  <p class="linkp"><a href="/submit/upload"> Return </a></p>
+
+  <table>
+    <tr>
+      <td> Measurer </td>
+      <td> fsid </td>
+      <td> Submission date </td>
+      <td> Submission status </td>
+      <td> <b> Measurement date </b> </td>
+      <td> &nbsp; </td>
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td> &nbsp; </td>
+      <td> Filename </td>
+      <td> File status </td>
+      <td> Details </td>
+      <td> Download </td>
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td> &nbsp; </td>
+      <td class="lastline" colspan="4"> <i> Comment </i> </td>
+    </tr>
+  {% for meas in measurements %}
+    <tr>
+      <td> {{ meas.measurer }} </td>
+      <td> {{ meas.id }} </td>
+      <td> {{ meas.date | date:"Y-m-d H:i:s" }} </td>
+      <td> {{ meas.status }} </td>
+      <td> <b> {{ meas.measure_date | date:"Y-m-d" }} </b> </td>
+      <td> &nbsp; </td>
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td> &nbsp; </td>
+      <td> {{ meas.fieldorigname }} </td>
+      <td> {{ meas.fieldstatus }} </td>
+      <td>
+	<a href="/submit/fdetails/{{ meas.id }}/"> details </a>
+      </td>
+      <td>
+	<a href="/submit/ffilesend/{{ meas.id }}/"> download </a>
+      </td>
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td> &nbsp; </td>
+      <td> {{ meas.dataorigname }} </td>
+      <td> {{ meas.datastatus }} </td>
+      <td>
+	<a href="/submit/ddetails/{{ meas.id }}/"> details </a>
+      </td>
+      <td>
+	<a href="/submit/dfilesend/{{ meas.id }}/"> download </a>
+      </td>
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td> &nbsp; </td>
+      <td class="lastline" colspan="4"> <i> {{ meas.comment }} </i> </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+{% endblock %}

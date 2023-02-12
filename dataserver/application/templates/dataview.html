@@ -1,0 +1,558 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="heading">
+  <h1> View point data </h1>
+</div>
+
+<div class="test">
+  {% for d in data %}
+  <div class="test_in" id="id{{ d.id }}">
+    <div class="headerbox textinfo" id="textinfo{{ d.id }}">
+      <div class="headerpart"> Site: {{ d.siteid }} {{ d.subsiteid }} {{ d.point }} </div>
+      <div class="headerpart"> Date: {{ d.date }} </div>
+      <div class="headerpart"> Start time: {{ d.start_time }} </div>
+      <div class="headerpart"> CO2: {{ d.co2 }} </div>
+      <div class="headerpart"> CH4: {{ d.ch4 }} </div>
+      <div class="headerpart"> N2O: {{ d.n2o }} </div>
+    </div>
+
+    <!-- co2 figure and trims -->
+    {% if d.co2 %}
+    <div class="infobox figureinfo">
+      <div class="figure" id="co2fig{{ d.id }}"></div>
+    </div>
+    <div class="infobox textinfo co2flux">
+      {% if d.co2_af == "none": %}
+      <p> no autotrimmed flux </p>
+      {% else %}
+      <p> autotrimmed flux: </p>
+      <ul>
+	<li> trim head: {{ d.co2_af.trim_head }} tail: {{ d.co2_af.trim_tail }} </li>
+	<li> flux: {{ d.co2_af.flux | float | round(9) }} </li>
+	<li> bad: {{ d.co2_af.bad }} </li>
+      </ul>
+      {% endif %}
+      <p> personal flux: </p>
+      <ul>
+	<li> trim head:
+	  <span id="trim_co2_head_val{{ d.id }}">
+	    {% if d.co2_pf == "none": %} NA {% else %}
+	    {{ d.co2_pf.trim_head }} {% endif %}
+	  </span>
+	  tail:
+	  <span id="trim_co2_tail_val{{ d.id }}">
+	    {% if d.co2_pf == "none": %} NA {% else %}
+	    {{ d.co2_pf.trim_tail }} {% endif %}
+	  </span>
+	</li>
+	<li> flux:
+	  <span id="fluxtextco2{{ d.id }}">
+	    {% if d.co2_pf == "none": %} NA {% else %}
+	    {{ d.co2_pf.flux | float | round(9) }} {% endif %}
+	  </span>
+	</li>
+	<li> bad:
+	  <span id="badtextco2{{ d.id }}">
+	    {% if d.co2_pf == "none": %} NA {% else %}
+	    {{ d.co2_pf.bad }} {% endif %}
+	  </span>
+	</li>
+      </ul>
+      <div class="badradio">
+	<input type="radio" name="co2radio{{ d.id }}" id="co2radiogood{{ d.id }}"
+	       value="good" checked> <label for="co2radiogood{{ d.id }}"> good </label>
+	<input type="radio" name="co2radio{{ d.id }}" id="co2radiobad{{ d.id }}"
+	       value="bad"> <label for="co2radiobad{{ d.id }}"> bad </label>
+      </div>
+      <p>
+        <input type="number" id="trim_co2_s_entry{{ d.id }}" class="trim_s_entry"
+	       value="0" step="1" pattern="\d+" min="0" max="90" />
+        <button class="trim_s_button" id="trim_co2_s_button{{ d.id }}" data-gas="1"
+		data-id="{{ d.id }}">
+          trim head
+        </button>
+      </p>
+      <p>
+        <input type="number" id="trim_co2_e_entry{{ d.id }}" class="trim_e_entry"
+	       value="0" step="1" pattern="\d+" min="0" max="90" />
+        <button class="trim_e_button" id="trim_co2_e_button{{ d.id }}" data-gas="1"
+		data-id="{{ d.id }}">
+          trim tail
+        </button>
+      </p>
+      <p>
+	<button class="personal_flux_button" data-id="{{ d.id }}" data-gas="1"
+		id="flux_co2_button{{ d.id }}">
+          set personal flux
+	</button>
+	<button class="clear_personal_button" data-id="{{ d.id }}" data-gas="1"
+		id="clear_co2_button{{ d.id }}">
+	  clear
+	</button>
+      </p>
+    </div>
+    {% endif %}
+
+    <!-- ch4 figure and trims -->
+    {% if d.ch4 %}
+    <div class="infobox figureinfo">
+      <div class="figure" id="ch4fig{{ d.id }}"></div>
+    </div>
+    <div class="infobox textinfo ch4flux">
+      {% if d.ch4_af == "none": %}
+      <p> no autotrimmed flux </p>
+      {% else %}
+      <p> autotrimmed flux: </p>
+      <ul>
+	<li> trim head: {{ d.ch4_af.trim_head }} tail: {{ d.ch4_af.trim_tail }} </li>
+	<li> flux: {{ d.ch4_af.flux | float | round(9) }} </li>
+	<li> bad: {{ d.ch4_af.bad }} </li>
+      </ul>
+      {% endif %}
+      <p> personal flux: </p>
+      <ul>
+	<li> trim head:
+	  <span id="trim_ch4_head_val{{ d.id }}">
+	    {% if d.ch4_pf == "none": %} NA {% else %}
+	    {{ d.ch4_pf.trim_head }} {% endif %}
+	  </span>
+	  tail:
+	  <span id="trim_ch4_tail_val{{ d.id }}">
+	    {% if d.ch4_pf == "none": %} NA {% else %}
+	    {{ d.ch4_pf.trim_tail }} {% endif %}
+	  </span>
+	</li>
+	<li> flux:
+	  <span id="fluxtextch4{{ d.id }}">
+	    {% if d.ch4_pf == "none": %} NA {% else %}
+	    {{ d.ch4_pf.flux | float | round(9) }} {% endif %}
+	  </span>
+	</li>
+	<li> bad:
+	  <span id="badtextch4{{ d.id }}">
+	    {% if d.ch4_pf == "none": %} NA {% else %}
+	    {{ d.ch4_pf.bad }} {% endif %}
+	  </span>
+	</li>
+      </ul>
+      <div class="badradio">
+	<input type="radio" name="ch4radio{{ d.id }}" id="ch4radiogood{{ d.id }}"
+	       value="good" checked> <label for="ch4radiogood{{ d.id }}"> good </label>
+	<input type="radio" name="ch4radio{{ d.id }}" id="ch4radiobad{{ d.id }}"
+	       value="bad"> <label for="ch4radiobad{{ d.id }}"> bad </label>
+      </div>
+      <p>
+        <input type="number" id="trim_ch4_s_entry{{ d.id }}" class="trim_entry"
+	       value="0" step="1" pattern="\d+" min="0" max="90" />
+        <button class="trim_s_button" id="trim_ch4_s_button{{ d.id }}" data-gas="2"
+		data-id="{{ d.id }}">
+          trim head
+        </button>
+      </p>
+      <p>
+        <input type="number" id="trim_ch4_e_entry{{ d.id }}" class="trim_entry"
+	       value="0" step="1" pattern="\d+" min="0" max="90" />
+        <button class="trim_e_button" id="trim_ch4_e_button{{ d.id }}" data-gas="2"
+		data-id="{{ d.id }}">
+          trim tail
+        </button>
+      </p>
+      <p>
+	<button class="personal_flux_button" data-id="{{ d.id }}" data-gas="2"
+		id="flux_ch4_button{{ d.id }}">
+          set personal flux
+	</button>
+	<button class="clear_personal_button" data-id="{{ d.id }}" data-gas="2"
+		       id="clear_ch4_button{{ d.id }}">
+	  clear
+	</button>
+      </p>
+    </div>
+    {% endif %}
+
+    <!-- n2o figure and trims -->
+    {% if d.n2o %}
+    <div class="infobox figureinfo">
+      <div class="figure" id="n2ofig{{ d.id }}"></div>
+    </div>
+    <div class="infobox textinfo n2oflux">
+      {% if d.n2o_af == "none": %}
+      <p> no autotrimmed flux </p>
+      {% else %}
+      <p> autotrimmed flux: </p>
+      <ul>
+	<li> trim head: {{ d.n2o_af.trim_head }} tail: {{ d.n2o_af.trim_tail }} </li>
+	<li> flux: {{ d.n2o_af.flux | float | round(9) }} </li>
+	<li> bad: {{ d.n2o_af.bad }} </li>
+      </ul>
+      {% endif %}
+      <p> personal flux: </p>
+      <ul>
+	<li> trim head:
+	  <span id="trim_n2o_head_val{{ d.id }}">
+	    {% if d.n2o_pf == "none": %} NA {% else %}
+	    {{ d.n2o_pf.trim_head }} {% endif %}
+	  </span>
+	  tail:
+	  <span id="trim_n2o_tail_val{{ d.id }}">
+	    {% if d.n2o_pf == "none": %} NA {% else %}
+	    {{ d.n2o_pf.trim_tail }} {% endif %}
+	  </span>
+	</li>
+	<li> flux:
+	  <span id="fluxtextn2o{{ d.id }}">
+	    {% if d.n2o_pf == "none": %} NA {% else %}
+	    {{ d.n2o_pf.flux | float | round(9) }} {% endif %}
+	  </span>
+	</li>
+	<li> bad:
+	  <span id="badtextn2o{{ d.id }}">
+	    {% if d.n2o_pf == "none": %} NA {% else %}
+	    {{ d.n2o_pf.bad }} {% endif %}
+	  </span>
+	</li>
+      </ul>
+      <div class="badradio">
+	<input type="radio" name="n2oradio{{ d.id }}" id="n2oradiogood{{ d.id }}"
+	       value="good" checked> <label for="n2oradiogood{{ d.id }}"> good </label>
+	<input type="radio" name="n2oradio{{ d.id }}" id="n2oradiobad{{ d.id }}"
+	       value="bad"> <label for="n2oradiobad{{ d.id }}"> bad </label>
+      </div>
+      <p>
+        <input type="number" id="trim_n2o_s_entry{{ d.id }}" class="trim_s_entry"
+	       value="0" step="1" pattern="\d+" min="0" max="90" />
+        <button class="trim_s_button" id="trim_n2o_s_button{{ d.id }}" data-gas="3"
+		data-id="{{ d.id }}">
+          trim head
+        </button>
+      </p>
+      <p>
+        <input type="number" id="trim_n2o_e_entry{{ d.id }}" class="trim_e_entry"
+	       value="0" step="1" pattern="\d+" min="0" max="90" />
+        <button class="trim_e_button" id="trim_n2o_e_button{{ d.id }}" data-gas="3"
+		data-id="{{ d.id }}">
+          trim tail
+        </button>
+      </p>
+      <p>
+	<button class="personal_flux_button" data-id="{{ d.id }}" data-gas="3"
+		id="flux_n2o_button{{ d.id }}">
+          set personal flux
+	</button>
+	<button class="clear_personal_button" data-id="{{ d.id }}" data-gas="3"
+		       id="clear_n2o_button{{ d.id }}">
+	  clear
+	</button>
+      </p>
+    </div>
+    {% endif %}
+    
+  </div>
+  {% endfor %}
+</div>
+
+<script src={{ url_for('static', filename='jquery-3.6.0.min.js') }}
+	type="text/javascript"></script>
+
+<script src={{ url_for('static', filename='d3.v7.min.js') }}
+	type="text/javascript"></script>
+
+<script>
+
+ const mat = JSON.parse('{{ data | tojson | safe }}');
+
+ for(let j = 0; j < mat.length; j++){
+   let d0 = mat[j]['data'];
+   let time_string0 = d0[0]['time'];
+   let init = new Date('1970-01-01T' + time_string0 + 'Z');
+   for(let i = 0; i < d0.length; i++){
+     let time_string_c = d0[i]['time'];
+     let point = new Date('1970-01-01T' + time_string_c + 'Z');
+     let seconds = (point.getTime() - init.getTime()) / 1000;
+     d0[i]['secs'] = seconds;
+   }
+ }
+
+ console.log(mat);
+
+ let svg_areas_co2 = [];
+ let svg_areas_ch4 = [];
+ let svg_areas_n2o = [];
+ 
+ let x_maxs = [];
+ let x_axes = [];
+ let y_axes_co2 = [];
+ let y_axes_ch4 = [];
+ let y_axes_n2o = [];
+ let y_axis_min_co2 = [];
+ let y_axis_min_ch4 = [];
+ let y_axis_min_n2o = [];
+ let y_axis_max_co2 = [];
+ let y_axis_max_ch4 = [];
+ let y_axis_max_n2o = [];
+ 
+ $('document').ready( () => {
+   
+   let gas = 'co2_ppm';
+
+   const point_color = '#3585ff'
+   const margin = {top: 20, right: 15, bottom: 60, left: 70};
+   const outer_width = 600;
+   const outer_height = 400;
+   const width = outer_width - margin.left - margin.right;
+   const height = outer_height - margin.top - margin.bottom;
+
+   for(let i = 0; i < mat.length; i++){
+     if(mat[i]['co2']){
+       let index = mat[i]['id'];
+       let basename = "#co2fig";
+       basename += index;
+       let base = d3.select(basename);
+       const svg_area_co2 = base.append('svg:svg')
+				.attr('width', width + margin.left + margin.right)
+				.attr('height', height + margin.top + margin.bottom)
+				.append("g")
+				.attr("transform",
+				      "translate(" + margin.left + "," + margin.top + ")");
+       svg_areas_co2.push(svg_area_co2);
+     }
+     if(mat[i]['ch4']){
+       let index = mat[i]['id'];
+       let basename = "#ch4fig";
+       basename += index;
+       let base = d3.select(basename);
+       const svg_area_ch4 = base.append('svg:svg')
+				.attr('width', width + margin.left + margin.right)
+				.attr('height', height + margin.top + margin.bottom)
+				.append("g")
+				.attr("transform",
+				      "translate(" + margin.left + "," + margin.top + ")");
+       svg_areas_ch4.push(svg_area_ch4);
+     }
+     if(mat[i]['n2o']){
+       let index = mat[i]['id'];
+       let basename = "#n2ofig";
+       basename += index;
+       let base = d3.select(basename);
+       const svg_area_n2o = base.append('svg:svg')
+				.attr('width', width + margin.left + margin.right)
+				.attr('height', height + margin.top + margin.bottom)
+				.append("g")
+				.attr("transform",
+				      "translate(" + margin.left + "," + margin.top + ")");
+       svg_areas_n2o.push(svg_area_n2o);
+     }
+   }
+
+   for(let i = 0; i < mat.length; i++){
+     let data = mat[i]['data'];
+     let index = mat[i]['id'];
+
+     // common x axis
+     const xmax = d3.max(data, (d) => d['secs']);
+     x_maxs.push(xmax);
+     const x = d3.scaleLinear()
+		 .domain([0, xmax])
+		 .range([0, width])
+		 .nice();
+     x_axes.push(x);
+     const x_axis = d3.axisBottom(x);
+
+     if(mat[i]['co2']){
+       const gx_axis = svg_areas_co2[i].append('g')
+				       .attr('transform', `translate(0, ${height})`)
+				       .call(x_axis);
+     }
+     if(mat[i]['ch4']){
+       const gx_axis = svg_areas_ch4[i].append('g')
+				       .attr('transform', `translate(0, ${height})`)
+				       .call(x_axis);
+     }
+     if(mat[i]['n2o']){
+       const gx_axis = svg_areas_n2o[i].append('g')
+				       .attr('transform', `translate(0, ${height})`)
+				       .call(x_axis);
+     }
+
+     // separate y axes
+     if(mat[i]['co2']){
+       const ymin_co2 = d3.min(data, (d) => d['co2_ppm']);
+       const ymax_co2 = d3.max(data, (d) => d['co2_ppm']);
+       const y_co2 = d3.scaleLinear().domain([ymin_co2, ymax_co2]).range([height, 0]).nice();
+       y_axes_co2.push(y_co2);
+       y_axis_min_co2.push(y_co2(ymin_co2));
+       y_axis_max_co2.push(y_co2(ymax_co2));
+       const y_axis = d3.axisLeft(y_co2);
+       const gy_axis = svg_areas_co2[i].append('g').call(y_axis);
+     }
+     if(mat[i]['ch4']){
+       const ymin_ch4 = d3.min(data, (d) => d['ch4_ppb']);
+       const ymax_ch4 = d3.max(data, (d) => d['ch4_ppb']);
+       const y_ch4 = d3.scaleLinear().domain([ymin_ch4, ymax_ch4]).range([height, 0]).nice();
+       y_axes_ch4.push(y_ch4);
+       y_axis_min_ch4.push(y_ch4(ymin_ch4));
+       y_axis_max_ch4.push(y_ch4(ymax_ch4));
+       const y_axis = d3.axisLeft(y_ch4);
+       const gy_axis = svg_areas_ch4[i].append('g').call(y_axis);
+     }
+     if(mat[i]['n2o']){
+       const ymin_n2o = d3.min(data, (d) => d['n2o_ppb']);
+       const ymax_n2o = d3.max(data, (d) => d['n2o_ppb']);
+       const y_n2o = d3.scaleLinear().domain([ymin_n2o, ymax_n2o]).range([height, 0]).nice();
+       y_axes_n2o.push(y_n2o);
+       y_axis_min_n2o.push(y_n2o(ymin_n2o));
+       y_axis_max_n2o.push(y_n2o(ymax_n2o));
+       const y_axis = d3.axisLeft(y_n2o);
+       const gy_axis = svg_areas_n2o[i].append('g').call(y_axis);
+     }
+
+     // axis labels
+     if(mat[i]['co2']){
+       svg_areas_co2[i].append('text').attr('x', `-${height/2}`).attr('dy', '-3.5em')
+		       .attr('transform', 'rotate(-90)').text('co2 ppm');
+       svg_areas_co2[i].append('text').attr('x', `${width/2}`).attr('y', `${height + 40}`)
+		       .text('seconds');
+     }
+     if(mat[i]['ch4']){
+       svg_areas_ch4[i].append('text').attr('x', `-${height/2}`).attr('dy', '-3.5em')
+		       .attr('transform', 'rotate(-90)').text('ch4 ppb');
+       svg_areas_ch4[i].append('text').attr('x', `${width/2}`).attr('y', `${height + 40}`)
+		       .text('seconds');
+     }
+     if(mat[i]['n2o']){
+       svg_areas_n2o[i].append('text').attr('x', `-${height/2}`).attr('dy', '-3.5em')
+		       .attr('transform', 'rotate(-90)').text('n2o ppb');
+       svg_areas_n2o[i].append('text').attr('x', `${width/2}`).attr('y', `${height + 40}`)
+		       .text('seconds');
+     }
+
+     // scatter points
+     if(mat[i]['co2']){
+       svg_areas_co2[i].selectAll("whatever").data(data).enter().append("circle")
+		       .attr("cx", function(d){ return x(d.secs) })
+		       .attr("cy", function(d){ return y_axes_co2[i](d.co2_ppm) })
+		       .attr("r", 2)
+     }
+     if(mat[i]['ch4']){
+       svg_areas_ch4[i].selectAll("whatever").data(data).enter().append("circle")
+		       .attr("cx", function(d){ return x(d.secs) })
+		       .attr("cy", function(d){ return y_axes_ch4[i](d.ch4_ppb) })
+		       .attr("r", 2)
+     }
+     if(mat[i]['n2o']){
+       svg_areas_n2o[i].selectAll("whatever").data(data).enter().append("circle")
+		       .attr("cx", function(d){ return x(d.secs) })
+		       .attr("cy", function(d){ return y_axes_n2o[i](d.n2o_ppb) })
+		       .attr("r", 2)
+     }
+
+     // linear fit
+     if(mat[i]['co2']){
+       let slope_id = "slope_co2_" + index;
+       let flux_name = (mat[i]['co2_pf'] == 'none') ? 'co2_af' : 'co2_pf';
+       svg_areas_co2[i].append('line').style("stroke", "lightgreen")
+		       .style("stroke-width", 2).attr("id", slope_id)
+		       .attr("x1", x(0))
+		       .attr("y1", y_axes_co2[i](mat[i][flux_name]['intercept']))
+		       .attr("x2", x(xmax))
+		       .attr("y2", y_axes_co2[i](mat[i][flux_name]['intercept'] +
+						 xmax * mat[i][flux_name]['slope']));
+     }
+     if(mat[i]['ch4']){
+       let slope_id = "slope_ch4_" + index;
+       let flux_name = (mat[i]['ch4_pf'] == 'none') ? 'ch4_af' : 'ch4_pf';
+       svg_areas_ch4[i].append('line').style("stroke", "lightgreen")
+		       .style("stroke-width", 2).attr("id", slope_id)
+		       .attr("x1", x(0))
+		       .attr("y1", y_axes_ch4[i](mat[i][flux_name]['intercept']))
+		       .attr("x2", x(xmax))
+		       .attr("y2", y_axes_ch4[i](mat[i][flux_name]['intercept'] +
+						 xmax * mat[i][flux_name]['slope']));
+     }
+     if(mat[i]['n2o']){
+       let slope_id = "slope_n2o_" + index;
+       let flux_name = (mat[i]['n2o_pf'] == 'none') ? 'n2o_af' : 'n2o_pf';
+       svg_areas_n2o[i].append('line').style("stroke", "lightgreen")
+		       .style("stroke-width", 2).attr("id", slope_id)
+		       .attr("x1", x(0))
+		       .attr("y1", y_axes_n2o[i](mat[i][flux_name]['intercept']))
+		       .attr("x2", x(xmax))
+		       .attr("y2", y_axes_n2o[i](mat[i][flux_name]['intercept'] +
+						 xmax * mat[i][flux_name]['slope']));
+     }
+
+     // trim start
+     if(mat[i]['co2']){
+       let trim_s_id = "trim_h_co2_" + index;
+       let flux_name = (mat[i]['co2_pf'] == 'none') ? 'co2_af' : 'co2_pf';
+       svg_areas_co2[i].append('line').style("stroke", "blue")
+		       .style("stroke-width", 1.5).attr("id", trim_s_id)
+		       .attr("x1", x(mat[i][flux_name]['trim_head']))
+		       .attr("y1", y_axis_min_co2[i])
+		       .attr("x2", x(mat[i][flux_name]['trim_head']))
+		       .attr("y2", y_axis_max_co2[i]);
+     }
+     if(mat[i]['ch4']){
+       let trim_s_id = "trim_h_ch4_" + index;
+       let flux_name = (mat[i]['ch4_pf'] == 'none') ? 'ch4_af' : 'ch4_pf';
+       svg_areas_ch4[i].append('line').style("stroke", "blue")
+		       .style("stroke-width", 1.5).attr("id", trim_s_id)
+		       .attr("x1", x(mat[i][flux_name]['trim_head']))
+		       .attr("y1", y_axis_min_ch4[i])
+		       .attr("x2", x(mat[i][flux_name]['trim_head']))
+		       .attr("y2", y_axis_max_ch4[i]);
+     }
+     if(mat[i]['n2o']){
+       let trim_s_id = "trim_h_n2o_" + index;
+       let flux_name = (mat[i]['n2o_pf'] == 'none') ? 'n2o_af' : 'n2o_pf';
+       svg_areas_n2o[i].append('line').style("stroke", "blue")
+		       .style("stroke-width", 1.5).attr("id", trim_s_id)
+		       .attr("x1", x(mat[i][flux_name]['trim_head']))
+		       .attr("y1", y_axis_min_n2o[i])
+		       .attr("x2", x(mat[i][flux_name]['trim_head']))
+		       .attr("y2", y_axis_max_n2o[i]);
+     }
+
+     // trim end
+     if(mat[i]['co2']){
+       let trim_e_id = "trim_t_co2_" + index;
+       let flux_name = (mat[i]['co2_pf'] == 'none') ? 'co2_af' : 'co2_pf';
+       svg_areas_co2[i].append('line').style("stroke", "blue")
+		       .style("stroke-width", 1.5).attr("id", trim_e_id)
+		       .attr("x1", x(xmax - mat[i][flux_name]['trim_tail']))
+		       .attr("y1", y_axis_min_co2[i])
+		       .attr("x2", x(xmax - mat[i][flux_name]['trim_tail']))
+		       .attr("y2", y_axis_max_co2[i]);
+     }
+     if(mat[i]['ch4']){
+       let trim_e_id = "trim_t_ch4_" + index;
+       let flux_name = (mat[i]['ch4_pf'] == 'none') ? 'ch4_af' : 'ch4_pf';
+       svg_areas_ch4[i].append('line').style("stroke", "blue")
+		       .style("stroke-width", 1.5).attr("id", trim_e_id)
+		       .attr("x1", x(xmax - mat[i][flux_name]['trim_tail']))
+		       .attr("y1", y_axis_min_ch4[i])
+		       .attr("x2", x(xmax - mat[i][flux_name]['trim_tail']))
+		       .attr("y2", y_axis_max_ch4[i]);
+     }
+     if(mat[i]['n2o']){
+       let trim_e_id = "trim_t_n2o_" + index;
+       let flux_name = (mat[i]['n2o_pf'] == 'none') ? 'n2o_af' : 'n2o_pf';
+       svg_areas_n2o[i].append('line').style("stroke", "blue")
+		       .style("stroke-width", 1.5).attr("id", trim_e_id)
+		       .attr("x1", x(xmax - mat[i][flux_name]['trim_tail']))
+		       .attr("y1", y_axis_min_n2o[i])
+		       .attr("x2", x(xmax - mat[i][flux_name]['trim_tail']))
+		       .attr("y2", y_axis_max_n2o[i]);
+     }
+
+   }
+
+ });
+</script>
+
+<script src={{ url_for('static', filename='dataviewfunctions.js') }}
+	    type="text/javascript"></script>
+
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "submit/base.html" %}
+
+{% load static %}
+
+{% block title %}measurements detail view{% endblock %}
+
+{% block content %}
+
+<div class="header contentbox">
+  <h3>
+    Details of submission {{ submission.number }} from user {{ submission.measurer }}
+  </h3>
+  <p class="textp">
+    Submitted {{ submission.date | date:"Y-m-d H:i:s" }}
+    Measured {{ submission.measure_date | date:"Y-m-d" }}
+  </p>
+
+  <p class="linkp"><a href="/submit/upload"> Return </a></p>
+  
+  {% if user.is_staff %}
+  <p class="linkp"><a href="/submit/list"> Full list </a></p>
+  {% endif %}
+</div>
+
+<div class="checks contentbox">
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  <p> device: {{ submission.device }} </p>
+  {% if submission.device == "licor" %}
+  <p> gases: {{ gases }} </p>
+  {% endif %}
+  <p> datafile read ok: {{ df_h_ok }} </p>
+  <p> validity: {{ validity }} </p>
+  <p> dimensions: {{ dims }} </p>
+  <p> fieldform read ok: {{ ff_ok }} </p>
+  <p> start_times: {{ start_times }} </p>
+  <p> rows in series: {{ nrows }} </p>
+</div>
+
+<div class="plot contentbox">
+  <p> CO<sub>2</sub> timeseries &ndash; warning: drawing may be slow on large data files! </p>
+  <button id="nappi"> DRAW </button>
+  <div class="chartwrapper">
+    <canvas id="co2" height="400" width="600"></canvas>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script type="text/javascript"> 
+ let fsid_text = "{{ submission.id }}";
+</script>
+
+<script src="{% static 'js/chart.min.js' %}"></script>
+<script src="{% static 'js/ddetail.js' %}"></script>
+
+{% endblock %}

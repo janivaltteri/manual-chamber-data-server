@@ -1,0 +1,11 @@
+Flask
+gunicorn
+sqlalchemy
+flask_login
+flask_migrate
+flask_sqlalchemy
+flask_wtf
+SQLAlchemy-serializer
+pandas
+requests
+scipy

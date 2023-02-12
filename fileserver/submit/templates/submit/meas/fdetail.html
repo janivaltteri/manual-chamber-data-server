@@ -1,0 +1,127 @@
+{% extends "submit/base.html" %}
+
+{% load static %}
+
+{% block title %}measurements detail view{% endblock %}
+
+{% block content %}
+
+<div class="header contentbox">
+  <h2 class="boxheader">
+    Details of submission fsid {{ submission.id }} from user {{ submission.measurer }}
+  </h2>
+  <p class="textp">
+    Submitted: {{ submission.date | date:"Y-m-d H:i:s" }}
+  </p>
+  <p class="textp">
+    Measured: {{ submission.measure_date | date:"Y-m-d" }}
+  </p>
+  <p class="textp">
+    Project: {{ submission.project }}
+  </p>
+  <p class="textp">
+    Chamber: {{ submission.chamber }}
+  </p>
+  <p class="textp">
+    Soil: {{ submission.soil }}
+  </p>
+  <p class="textp">
+    Comment: {{ submission.comment }}
+  </p>
+  <p class="textp">
+    Field form type: {{ submission.fftype }}
+  </p>
+  
+  <p class="linkp"><a href="/submit/upload"> Return </a></p>
+  
+  {% if user.is_staff %}
+  <p class="linkp"><a href="/submit/list"> Full list </a></p>
+  {% endif %}
+</div>
+
+<div class="submitform contentbox">
+  <h2 class="boxheader"> Change details of submission </h2>
+
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <div class="buttonbox">
+      <input type="submit" value="CHANGE">
+    </div>
+  </form>
+</div>
+
+<div class="status contentbox">
+  <p> Current status is <b> {{ submission.status }} </b> </p>
+  <p> <button id="status_change"> CHANGE </button> </p>
+</div>
+
+<div class="checks contentbox">
+  <p> pandas read ok: {{ ff_ok }} </p>
+  <p> start and end times ok: {{ ff_startend_ok }} </p>
+  <p> datetime columns ok: {{ ff_datetime_ok }} </p>
+  <p> durations ok: {{ ff_durations_ok }} </p>
+  <p> siteids ok: {{ ff_siteids_ok }} </p>
+  <p> subsiteids ok: {{ ff_subsiteids_ok }} </p>
+  <p> numerical columns ok: {{ ff_numerics_ok }} </p>
+  <p> chamber volume ok: {{ ff_volume_ok }} </p>
+  <p> chamber area ok: {{ ff_area_ok }} </p>
+  <p> validity: {{ validity }} </p>
+  <p> dims: {{ dims }} </p>
+</div>
+
+<div class="details contentbox">
+  <table>
+    <tr>
+      <td> Date </td>
+      <td> Site </td>
+      <td> Subsite </td>
+      <td> Point </td>
+      <td> Start time </td>
+      <td> End time </td>
+      <td> Start ppm </td>
+      <td> End ppm </td>
+      <td> Start temp </td>
+      <td> End temp </td>
+      <td> Chamber volume </td>
+      <td> Chamber area </td>
+    </tr>
+    {% for dt in details %}
+    <tr>
+      <td> {{ dt.date | date:"Y-m-d" }} </td>
+      <td> {{ dt.siteid }} </td>
+      <td> {{ dt.subsiteid }} </td>
+      <td> {{ dt.point }} </td>
+      <td> {{ dt.start_time | date:"H:i:s" }} </td>
+      <td> {{ dt.end_time | date:"H:i:s" }} </td>
+      <td> {{ dt.start_ppm }} </td>
+      <td> {{ dt.end_ppm }} </td>
+      <td> {{ dt.start_temp }} </td>
+      <td> {{ dt.end_temp }} </td>
+      <td> {{ dt.chamber_vol }} </td>
+      <td> {{ dt.chamber_area }} </td>
+    </tr>
+    {% endfor %}
+    <table>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script type="text/javascript"> 
+ let fsid_text = "{{ submission.id }}";
+</script>
+
+<script src="{% static 'js/ddetail.js' %}"></script>
+
+{% endblock %}
+

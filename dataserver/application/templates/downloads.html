@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="heading">
+  <h1> Data download </h1>
+  <p> Back to <a href="{{ url_for('index') }}">Index</a> </p>
+  <div class="messages contentbox">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+  </div>
+</div>
+
+<div class="downloads contentbox">
+  <h3> Download data for a specific site id </h3>
+  <table>
+    <tr>
+      <td> Siteid </td>
+      <td> Count </td>
+      <td> Download </td>
+    </tr>
+    {% for d in data %}
+    <tr>
+      <td> {{ d.siteid }} </td>
+      <td> {{ d.count }} </td>
+      <td>
+	<a href="/api/dataframe/{{ d.siteid }}">download</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+{% endblock %}
